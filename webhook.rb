@@ -8,7 +8,7 @@ require 'pony'
 Stripe.api_key = ENV['STRIPE_API_KEY']
 
 $baseInvoice = {
-    "logo" => "https://invoiced.com/img/logo-square.png",
+    "logo" => "http://invoiced.com/img/logo-invoice.png",
     "from" => "Invoiced
 701 Brazos St
 Austin, TX 78748",
@@ -51,8 +51,8 @@ def genInvoice(customer, invoice)
     req.body = params.to_json
 
     res = Net::HTTP.start(uri.host, uri.port, :use_ssl => true) do |http|
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        http.ssl_version = :SSLv3
+        # http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        # http.ssl_version = :SSLv3
         http.request req
     end
 end
