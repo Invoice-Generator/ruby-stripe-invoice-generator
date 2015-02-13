@@ -22,6 +22,14 @@ def getInvoice(customer, invoice)
     })
 end
 
+def getBody(customer)
+    "Hi #{customer.name},
+
+A new invoice was created on your account as part of your subscription. Please keep the attached invoice for your records. Have a nice day!
+
+- *Your Company*"
+end
+
 StripeEvent.subscribe 'invoice.created' do |event|
     puts event
 
@@ -30,25 +38,18 @@ StripeEvent.subscribe 'invoice.created' do |event|
         return
     end
 
-    # get customer from stripe
     customer = Stripe::Customer.retrieve(invoice.customer)
+    pdf = getInvoice(customer, invoice)
     puts customer
-
-    # fetch invoice pdf
-    pdf = getInvoice(customer)
 
     # send the invoice
     Pony.mail({
         :to => customer.email,
         :from => 'yourcompany@example.com',
         :subject => 'Invoice from *Your Company*',
-        :body => "Hi #{customer.name},
-
-A new invoice was created on your account as part of your subscription. Please keep the attached invoice for your records. Have a nice day!
-
-- *Your Company*",
+        :body => getBody(customer),
         :attachments => {
-            "invoice.pdf" => pdf.body
+            "invoice.pdf" => pdf.body,
         },
         :via => :smtp,
         :via_options => {
