@@ -8,13 +8,13 @@ require 'pony'
 Stripe.api_key = ENV['STRIPE_API_KEY']
 
 baseInvoice = {
-    logo => "https://invoiced.com/img/logo-square.png",
-    from => "Invoiced
+    "logo" => "https://invoiced.com/img/logo-square.png",
+    "from" => "Invoiced
 701 Brazos St
 Austin, TX 78748",
-    payment_terms => "Auto-Billed - Do Not Pay",
-    notes => "Thanks for being an awesome customer!",
-    terms => "No need to submit payment. You will be auto-billed for this invoice."
+    "payment_terms" => "Auto-Billed - Do Not Pay",
+    "notes" => "Thanks for being an awesome customer!",
+    "terms" => "No need to submit payment. You will be auto-billed for this invoice."
 }
 
 def genInvoice(customer, invoice)
@@ -78,7 +78,7 @@ A new invoice was created on your account as part of your subscription. Please k
     Pony.mail({
         :to => customer.email,
         :from => 'no-reply@invoiced.com',
-        :subject => 'Invoice from Invoiced'
+        :subject => 'Invoice from Invoiced',
         :body => body,
         :attachments => {
             "invoice.pdf" => pdf.body,
