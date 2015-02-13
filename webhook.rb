@@ -7,15 +7,21 @@ require 'pony'
 
 Stripe.api_key = ENV['STRIPE_API_KEY']
 
+baseInvoice = {
+    logo => "https://invoiced.com/img/logo-square.png",
+    from => "Invoiced
+701 Brazos St
+Austin, TX 78748",
+    payment_terms => "Auto-Billed - Do Not Pay",
+    notes => "Thanks for being an awesome customer!",
+    terms => "No need to submit payment. You will be auto-billed for this invoice."
+}
+
 def genInvoice(customer, invoice)
     uri = URI('https://invoice-generator.com')
 
-    from = "Invoiced
-701 Brazos St
-Austin, TX 78748"
-
-    # TODO could get address from metadata
     to = customer.description
+    # TODO should get address from metadata
 
     items = invoice.lines.data.map do |line|
         name = line.type == 'subscription' ? line.plan.name : line.description
@@ -28,22 +34,17 @@ Austin, TX 78748"
 
     # TODO discounts
 
-    params = {
-        "logo" => "https://invoiced.com/img/logo-square.png",
-        "from" => from,
+    params = baseInvoice.merge({
         "to" => to,
         "currency" => invoice.currency,
         "number" => invoice.id,
-        "payment_terms" => "Auto-Billed - Do Not Pay",
         "date" => Time.at(invoice.date).strftime("%b %-d, %Y"),
         "items" => items,
         "fields" => {
             "tax" => invoice.tax_percent ? "%" : false
         },
-        "tax" => invoice.tax_percent,
-        "notes" => "Thanks for being an awesome customer!",
-        "terms" => "No need to submit payment. You will be auto-billed for this invoice."
-    }
+        "tax" => invoice.tax_percent
+    })
     
     req = Net::HTTP::Post.new uri
     req['Content-Type'] = 'application/json'
@@ -76,7 +77,7 @@ A new invoice was created on your account as part of your subscription. Please k
 
     Pony.mail({
         :to => customer.email,
-        :from => 'yourcompany@example.com',
+        :from => 'no-reply@invoiced.com',
         :subject => 'Invoice from Invoiced'
         :body => body,
         :attachments => {
