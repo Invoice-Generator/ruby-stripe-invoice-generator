@@ -12,7 +12,7 @@ def getInvoice(customer, invoice)
 
     Net::HTTP.post_form(URI.parse("https://invoice-generator.com"), {
         "from" => "*Your Company*",
-        "to" => customer.name,
+        "to" => customer.description,
         "number" => invoice.id,
         "payment_terms" => "Auto-Billed - Do Not Pay",
         "date" => date,
@@ -23,7 +23,7 @@ def getInvoice(customer, invoice)
 end
 
 def getBody(customer)
-    "Hi " + customer.name + ",
+    "Hi " + customer.description + ",
 
 A new invoice was created on your account as part of your subscription. Please keep the attached invoice for your records. Have a nice day!
 
