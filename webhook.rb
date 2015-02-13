@@ -23,7 +23,7 @@ def getInvoice(customer, invoice)
 end
 
 def getBody(customer)
-    "Hi " customer.name ",
+    "Hi " + customer.name + ",
 
 A new invoice was created on your account as part of your subscription. Please keep the attached invoice for your records. Have a nice day!
 
@@ -31,9 +31,8 @@ A new invoice was created on your account as part of your subscription. Please k
 end
 
 StripeEvent.subscribe 'invoice.created' do |event|
-    puts event
-
     invoice = event.data.object
+    puts invoice
     if invoice.amount_due < 0
         return
     end
