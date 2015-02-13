@@ -29,7 +29,7 @@ class BillingEventLogger
 end
 
 StripeEvent.configure do |events|
-    events.all BillingEventLogger.new(logger)
+    events.all BillingEventLogger.new(env['rack.logger'])
     events.subscribe 'invoice.created', InvoiceCreated.new
 end
 
