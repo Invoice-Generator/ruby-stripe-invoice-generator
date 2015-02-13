@@ -8,7 +8,7 @@ Stripe.api_key = ENV['STRIPE_API_KEY']
 
 def getInvoice(url)
     Net::HTTP.post_form(URI.parse(url), {
-        "from" => "Your Company",
+        "from" => "*Your Company*",
         "to" => "To"
     })
 end
@@ -32,7 +32,7 @@ StripeEvent.subscribe 'invoice.created' do |event|
     Pony.mail({
         :to => customer.email,
         :from => 'yourcompany@example.com',
-        :subject => 'Invoice from Your Company',
+        :subject => 'Invoice from *Your Company*',
         :attachments => {
             "invoice.pdf" => pdf.body
         }
