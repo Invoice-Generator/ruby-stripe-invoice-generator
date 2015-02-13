@@ -8,7 +8,7 @@ Stripe.api_key = ENV['STRIPE_API_KEY']
 
 def getInvoice(url)
     Net::HTTP.post_form(URI.parse(url), {
-        "from" => "Your Name",
+        "from" => "Your Company",
         "to" => "To"
     })
 end
@@ -23,8 +23,20 @@ StripeEvent.subscribe 'invoice.created' do |event|
 
     date = Time.at(event.data.object.date).strftime("%b %-d, %Y")
 
+    # get customer from stripe
+    customer = Stripe::Customer.retrieve(invoice.customer)
+    puts customer
+
+    # fetch invoice pdf
     pdf = getInvoice('https://invoice-generator.com')
-    puts pdf.body
+    Pony.mail({
+        :to => customer.email,
+        :from => 'yourcompany@example.com',
+        :subject => 'Invoice from Your Company',
+        :attachments => {
+            "invoice.pdf" => pdf.body
+        }
+    })
 end
 
 post '/_billing_events' do
