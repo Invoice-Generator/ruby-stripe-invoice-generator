@@ -11,6 +11,7 @@ StripeEvent.subscribe 'invoice.created' do |event|
     invoice = event.data.object
     if invoice.amount_due < 0
         return
+    end
 
     date = Time.at(event.data.object.date).strftime("%b %-d, %Y")
 end
