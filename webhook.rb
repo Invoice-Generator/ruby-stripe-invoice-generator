@@ -7,8 +7,17 @@ require 'pony'
 
 Stripe.api_key = ENV['STRIPE_API_KEY']
 
-def getInvoice(customer, invoice)
+def genInvoice(customer, invoice)
     date = Time.at(invoice.date).strftime("%b %-d, %Y")
+
+    items = invoice.lines.data.map do |line|
+        name = line.type == 'subscription' ? line.plan.name : line.description
+        {
+            "name" => name,
+            "quantity" => line.quantity,
+            "unit_cost" => line.amount
+        }
+    end
 
     Net::HTTP.post_form(URI.parse("https://invoice-generator.com"), {
         "from" => "*Your Company*
@@ -18,7 +27,7 @@ City, State Zip",
         "number" => invoice.id,
         "payment_terms" => "Auto-Billed - Do Not Pay",
         "date" => date,
-        # TODO items
+        "items" => items,
         "notes" => "Thanks for being an awesome customer!",
         "terms" => "No need to submit payment. You will be auto-billed for this invoice."
     })
@@ -40,7 +49,7 @@ StripeEvent.subscribe 'invoice.created' do |event|
     end
 
     customer = Stripe::Customer.retrieve(invoice.customer)
-    pdf = getInvoice(customer, invoice)
+    pdf = genInvoice(customer, invoice)
     puts customer
 
     # send the invoice
