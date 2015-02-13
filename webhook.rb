@@ -42,6 +42,7 @@ City, State Zip",
     }
     
     req = Net::HTTP::Post.new uri
+    req['Content-Type'] = 'application/json'
     req.body = params.to_json
 
     res = Net::HTTP.start(uri.host, uri.port, :use_ssl => true) do |http|
