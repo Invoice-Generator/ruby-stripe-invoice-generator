@@ -7,7 +7,7 @@ require 'pony'
 
 Stripe.api_key = ENV['STRIPE_API_KEY']
 
-baseInvoice = {
+$baseInvoice = {
     "logo" => "https://invoiced.com/img/logo-square.png",
     "from" => "Invoiced
 701 Brazos St
@@ -34,7 +34,7 @@ def genInvoice(customer, invoice)
 
     # TODO discounts
 
-    params = baseInvoice.merge({
+    params = $baseInvoice.merge({
         "to" => to,
         "currency" => invoice.currency,
         "number" => invoice.id,
