@@ -49,6 +49,16 @@ A new invoice was created on your account as part of your subscription. Please k
 - *Your Company*",
         :attachments => {
             "invoice.pdf" => pdf.body
+        },
+        :via => :smtp,
+        :via_options => {
+            :address => ENV['SMTP_SERVER'],
+            :port => ENV['SMTP_PORT'],
+            :domain => 'heroku.com',
+            :user_name => ENV['SMTP_USERNAME'],
+            :password => ENV['SMTP_PASSWORD'],
+            :authentication => :plain,
+            :enable_starttls_auto => true
         }
     })
 end
