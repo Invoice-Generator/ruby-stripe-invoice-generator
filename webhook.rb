@@ -19,13 +19,20 @@ def genInvoice(customer, invoice)
         }
     end
 
+    # TODO discounts
+
     Net::HTTP.post_form(URI.parse("https://invoice-generator.com"), {
         "from" => "*Your Company*
 Address
 City, State Zip",
-        "to" => customer.description,
+        "to" => customer.description, # TODO could get address from metadata
+        "currency" => invoice.currency,
         "number" => invoice.id,
         "payment_terms" => "Auto-Billed - Do Not Pay",
+        "tax" => invoice.tax_percent,
+        "fields" => {
+            "tax" => invoice.tax_percent ? "%" : false
+        },
         "date" => date,
         "items" => items,
         "notes" => "Thanks for being an awesome customer!",
@@ -56,7 +63,6 @@ StripeEvent.subscribe 'invoice.created' do |event|
     Pony.mail({
         :to => customer.email,
         :from => 'yourcompany@example.com',
-        :sender => '*Your Company*',
         :subject => 'Invoice from *Your Company*',
         :body => getBody(customer),
         :attachments => {
