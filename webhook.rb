@@ -61,7 +61,7 @@ StripeEvent.subscribe 'invoice.created' do |event|
     invoice = event.data.object
     puts invoice
     if invoice.amount_due == 0
-        return "blank invoice"
+        next
     end
 
     customer = Stripe::Customer.retrieve(invoice.customer)
