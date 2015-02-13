@@ -3,9 +3,6 @@ require 'sinatra'
 require 'stripe_event'
 require 'net/http'
 require 'uri'
-require 'logger'
-
-enable :logging
 
 Stripe.api_key = ENV['STRIPE_API_KEY']
 
@@ -27,7 +24,7 @@ StripeEvent.subscribe 'invoice.created' do |event|
     date = Time.at(event.data.object.date).strftime("%b %-d, %Y")
 
     pdf = getInvoice('https://invoice-generator.com')
-    puts pdf
+    puts pdf.body
 end
 
 post '/_billing_events' do
