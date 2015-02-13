@@ -11,7 +11,9 @@ def getInvoice(customer, invoice)
     date = Time.at(invoice.date).strftime("%b %-d, %Y")
 
     Net::HTTP.post_form(URI.parse("https://invoice-generator.com"), {
-        "from" => "*Your Company*",
+        "from" => "*Your Company*
+Address
+City, State Zip",
         "to" => customer.description,
         "number" => invoice.id,
         "payment_terms" => "Auto-Billed - Do Not Pay",
@@ -34,7 +36,7 @@ StripeEvent.subscribe 'invoice.created' do |event|
     invoice = event.data.object
     puts invoice
     if invoice.amount_due == 0
-        return
+        return "blank invoice"
     end
 
     customer = Stripe::Customer.retrieve(invoice.customer)
