@@ -33,7 +33,7 @@ end
 StripeEvent.subscribe 'invoice.created' do |event|
     invoice = event.data.object
     puts invoice
-    if invoice.amount_due < 0
+    if invoice.amount_due == 0
         return
     end
 
@@ -45,6 +45,7 @@ StripeEvent.subscribe 'invoice.created' do |event|
     Pony.mail({
         :to => customer.email,
         :from => 'yourcompany@example.com',
+        :sender => '*Your Company*',
         :subject => 'Invoice from *Your Company*',
         :body => getBody(customer),
         :attachments => {
