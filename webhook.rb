@@ -6,7 +6,7 @@ require 'stripe_event'
 Stripe.api_key = ENV['STRIPE_API_KEY']
 
 StripeEvent.subscribe 'invoice.created' do |event|
-    request.logger.info(event)
+    logger.info(event)
 
     invoice = event.data.object
     if invoice.amount_due < 0
