@@ -15,7 +15,7 @@ def genInvoice(customer, invoice)
         {
             "name" => name,
             "quantity" => line.quantity,
-            "unit_cost" => line.amount
+            "unit_cost" => line.amount / 100
         }
     end
 
