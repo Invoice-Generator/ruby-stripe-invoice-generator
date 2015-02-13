@@ -21,7 +21,9 @@ def genInvoice(customer, invoice)
 
     # TODO discounts
 
-    Net::HTTP.post_form(URI.parse("https://invoice-generator.com"), {
+    uri = URI('https://invoice-generator.com')
+
+    params = {
         "from" => "*Your Company*
 Address
 City, State Zip",
@@ -37,7 +39,16 @@ City, State Zip",
         "items" => items,
         "notes" => "Thanks for being an awesome customer!",
         "terms" => "No need to submit payment. You will be auto-billed for this invoice."
-    })
+    }
+    
+    req = Net::HTTP::Post.new uri
+    req.body = params.to_json
+
+    res = Net::HTTP.start(uri.host, uri.port, :use_ssl => true) do |http|
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        http.ssl_version = :SSLv3
+        http.request req
+    end
 end
 
 def getBody(customer)
