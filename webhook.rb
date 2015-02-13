@@ -23,7 +23,7 @@ def getInvoice(customer, invoice)
 end
 
 def getBody(customer)
-    "Hi #{customer.name},
+    "Hi " customer.name ",
 
 A new invoice was created on your account as part of your subscription. Please keep the attached invoice for your records. Have a nice day!
 
