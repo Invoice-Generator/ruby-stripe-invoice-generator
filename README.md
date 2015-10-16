@@ -1,5 +1,6 @@
-# ruby-stripe-invoice-generator
-Generate and send invoices from Stripe webhooks in Ruby with the invoice-generator.com API
+Ruby Stripe Invoice Generator
+=====
+Generate and send invoices from Stripe webhooks in Ruby with the [Invoice Generator API](https://github.com/Invoiced/invoice-generator-api).
 
 ## About
 
