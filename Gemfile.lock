@@ -16,7 +16,7 @@ GEM
     netrc (0.10.2)
     pony (1.11)
       mail (>= 2.0)
-    rack (1.6.0)
+    rack (1.6.12)
     rack-protection (1.5.3)
       rack
     rest-client (1.7.2)
@@ -43,5 +43,6 @@ PLATFORMS
 
 DEPENDENCIES
   pony
+  rack (>= 1.6.12)
   sinatra
   stripe_event
